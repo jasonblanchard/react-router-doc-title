@@ -43,7 +43,9 @@ export default class RootContainer extends React.Component {
   render() {
     return (
       <div>
+      
         <A11yAnnouncer />
+        
         <h1>My App</h1>
         ...
       </div>
