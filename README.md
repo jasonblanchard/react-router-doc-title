@@ -1,4 +1,4 @@
-# eact-router-doc-title
+# react-router-doc-title
 Update page title when route changes using React Router. Also announces new title to screen reader.
 
 **NOTE: Work in progress!**
