@@ -31,28 +31,6 @@ function handleUpdate() {
 React.render(<Router history={history} routes={routes} onUpdate={handleUpdate} />);
 ```
 
-##n. Add `A11yAnnouncer` component to layout
-In your layout or root container, add the `<A11yAnnouncer>` container to hold screen reader announcements.
-
-`RootContainer.js`:
-```javascript
-import React from 'react';
-import { A11yAnnouncer } from 'react-router-doc-title';
-
-export default class RootContainer extends React.Component {
-  render() {
-    return (
-      <div>
-      
-        <A11yAnnouncer />
-        
-        <h1>My App</h1>
-        ...
-      </div>
-    );
-  }
-}
-```
 
 ## 3. Initialize title on server (for universal apps)
 Get the title from `renderProps` and set it in your template. Here's an example using Express and Handlebars:
@@ -106,4 +84,27 @@ app.get('/*', (req, res) => {
     <div id='app'>{{{markup}}}</div>
   </body>
 </html>
+```
+
+##4. Add `A11yAnnouncer` component to layout
+In your layout or root container, add the `<A11yAnnouncer>` container to hold screen reader announcements.
+
+`RootContainer.js`:
+```javascript
+import React from 'react';
+import { A11yAnnouncer } from 'react-router-doc-title';
+
+export default class RootContainer extends React.Component {
+  render() {
+    return (
+      <div>
+      
+        <A11yAnnouncer />
+        
+        <h1>My App</h1>
+        ...
+      </div>
+    );
+  }
+}
 ```
