@@ -20,12 +20,12 @@ In your client-side react-router config, add an `onUpdate` handler:
 ```
 import routes from '../shared/routes';
 import { Router } from 'react-router';
-import { transitionTitle } from 'react-router-doc-title';
+import { transitionDocTitle } from 'react-router-doc-title';
 
 const history = createBrowserHistory();
 
 function handleUpdate() {
-  transitionTitle(this.state);
+  transitionDocTitle(this.state);
 }
 
 React.render(<Router history={history} routes={routes} onUpdate={handleUpdate} />);
