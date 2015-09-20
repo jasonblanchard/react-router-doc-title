@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "transpile": "./node_modules/babel/bin/babel.js src/index.es6 -o index.js",
+    "transpile:watch": "npm run transpile -- -w"
   },
   "author": "",
   "license": "ISC",
