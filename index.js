@@ -18,13 +18,16 @@ function _getDocTitle(routeTree, docTitleProp) {
 }
 
 // Expects to get routeTree from this.state inside the onUpdate callback
-function _getDocTitleFromState(state, docTitleProp) {
+function _getDocTitleFromState(state) {
+  var docTitleProp = arguments.length <= 1 || arguments[1] === undefined ? 'docTitle' : arguments[1];
+
   return _getDocTitle(state.routes, docTitleProp);
 }
 
 function _setTitle(title, _ref) {
   var siteName = _ref.siteName;
-  var delimiter = _ref.delimiter;
+  var _ref$delimiter = _ref.delimiter;
+  var delimiter = _ref$delimiter === undefined ? '-' : _ref$delimiter;
 
   var fullTitle = '';
 
@@ -58,10 +61,8 @@ function _updateTitle(title, _ref2) {
 
 // Expects to get renderProps from renderProps in match() callback
 function getDocTitleFromRenderProps(renderProps, config) {
-  var _config$docTitleProp = config.docTitleProp;
-  var docTitleProp = _config$docTitleProp === undefined ? 'docTitle' : _config$docTitleProp;
-  var _config$delimiter = config.delimiter;
-  var delimiter = _config$delimiter === undefined ? '-' : _config$delimiter;
+  var docTitleProp = config.docTitleProp;
+  var delimiter = config.delimiter;
   var siteName = config.siteName;
 
   var title = _getDocTitle(renderProps.routes, docTitleProp);
@@ -71,10 +72,10 @@ function getDocTitleFromRenderProps(renderProps, config) {
 }
 
 function transitionDocTitle(state, config) {
-  var _config$docTitleProp2 = config.docTitleProp;
-  var docTitleProp = _config$docTitleProp2 === undefined ? 'docTitle' : _config$docTitleProp2;
+  var docTitleProp = config.docTitleProp;
 
   var title = _getDocTitleFromState(state, docTitleProp);
+
   var lastTitle = document.title;
   if (title) {
     if (title !== lastTitle) {

@@ -9,11 +9,11 @@ function _getDocTitle(routeTree, docTitleProp) {
 }
 
 // Expects to get routeTree from this.state inside the onUpdate callback
-function _getDocTitleFromState(state, docTitleProp) {
+function _getDocTitleFromState(state, docTitleProp = 'docTitle') {
   return _getDocTitle(state.routes, docTitleProp);
 }
 
-function _setTitle(title, { siteName, delimiter}) {
+function _setTitle(title, { siteName, delimiter = '-' }) {
   let fullTitle = '';
 
   if (siteName) {
@@ -42,7 +42,8 @@ function _updateTitle(title, {
 
 // Expects to get renderProps from renderProps in match() callback
 function getDocTitleFromRenderProps(renderProps, config) {
-  const { docTitleProp = 'docTitle', delimiter = '-', siteName} = config;
+  const { docTitleProp, delimiter, siteName} = config;
+
   const title = _getDocTitle(renderProps.routes, docTitleProp);
   if (title) {
     return _setTitle(title, { siteName, delimiter });
@@ -50,9 +51,10 @@ function getDocTitleFromRenderProps(renderProps, config) {
 }
 
 function transitionDocTitle(state, config) {
-  const { docTitleProp = 'docTitle' } = config;
+  const { docTitleProp } = config;
 
   const title = _getDocTitleFromState(state, docTitleProp);
+
   const lastTitle = document.title;
   if (title) {
     if (title !== lastTitle) {
