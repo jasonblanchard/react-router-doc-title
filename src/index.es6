@@ -31,12 +31,10 @@ function _updateTitle(title, {
   loadAlertPhrase = 'loaded',
   announceManner = 'assertive',
 }) {
-  if (siteName) {
-    document.title = _setTitle(title, { siteName, delimiter});
+  document.title = _setTitle(title, { siteName, delimiter});
 
-    if (shouldAnnounce) {
-      a11yToolkit.announce(`${title} ${loadAlertPhrase}`, announceManner);
-    }
+  if (shouldAnnounce) {
+    a11yToolkit.announce(`${title} ${loadAlertPhrase}`, announceManner);
   }
 
   return title;
@@ -46,7 +44,9 @@ function _updateTitle(title, {
 function getDocTitleFromRenderProps(renderProps, config) {
   const { docTitleProp = 'docTitle', delimiter = '-', siteName} = config;
   const title = _getDocTitle(renderProps.routes, docTitleProp);
-  return _setTitle(title, { siteName, delimiter });
+  if (title) {
+    return _setTitle(title, { siteName, delimiter });
+  }
 }
 
 function transitionDocTitle(state, config) {
@@ -59,6 +59,10 @@ function transitionDocTitle(state, config) {
       _updateTitle(title, config);
     }
   }
+}
+
+function transitionComputedDocTitle(title, config) {
+  _updateTitle(title, config);
 }
 
 const A11yAnnouncer = React.createClass({
@@ -82,5 +86,5 @@ module.exports = {
   getDocTitleFromRenderProps: getDocTitleFromRenderProps,
   transitionDocTitle: transitionDocTitle,
   A11yAnnouncer: A11yAnnouncer,
-  //transitionComputedDocTitle: transitionComputedDocTitle,
+  transitionComputedDocTitle: transitionComputedDocTitle,
 };
