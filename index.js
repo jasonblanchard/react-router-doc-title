@@ -22,39 +22,63 @@ function _getDocTitleFromState(state, docTitleProp) {
   return _getDocTitle(state.routes, docTitleProp);
 }
 
-// Expects to get renderProps from renderProps in match() callback
-function getDocTitleFromRenderProps(renderProps) {
-  return _getDocTitle(renderProps.routes);
+function _setTitle(title, _ref) {
+  var siteName = _ref.siteName;
+  var delimiter = _ref.delimiter;
+
+  var fullTitle = '';
+
+  if (siteName) {
+    fullTitle = title + ' ' + delimiter + ' ' + siteName;
+  } else {
+    fullTitle = '' + title;
+  }
+  return fullTitle;
 }
 
-function transitionDocTitle(state) {
-  var _ref = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+function _updateTitle(title, _ref2) {
+  var siteName = _ref2.siteName;
+  var _ref2$delimiter = _ref2.delimiter;
+  var delimiter = _ref2$delimiter === undefined ? '-' : _ref2$delimiter;
+  var _ref2$shouldAnnounce = _ref2.shouldAnnounce;
+  var shouldAnnounce = _ref2$shouldAnnounce === undefined ? true : _ref2$shouldAnnounce;
+  var _ref2$loadAlertPhrase = _ref2.loadAlertPhrase;
+  var loadAlertPhrase = _ref2$loadAlertPhrase === undefined ? 'loaded' : _ref2$loadAlertPhrase;
+  var _ref2$announceManner = _ref2.announceManner;
+  var announceManner = _ref2$announceManner === undefined ? 'assertive' : _ref2$announceManner;
 
-  var siteName = _ref.siteName;
-  var _ref$docTitleProp = _ref.docTitleProp;
-  var docTitleProp = _ref$docTitleProp === undefined ? 'docTitle' : _ref$docTitleProp;
-  var _ref$delimiter = _ref.delimiter;
-  var delimiter = _ref$delimiter === undefined ? '-' : _ref$delimiter;
-  var _ref$shouldAnnounce = _ref.shouldAnnounce;
-  var shouldAnnounce = _ref$shouldAnnounce === undefined ? true : _ref$shouldAnnounce;
-  var _ref$loadAlertPhrase = _ref.loadAlertPhrase;
-  var loadAlertPhrase = _ref$loadAlertPhrase === undefined ? 'loaded' : _ref$loadAlertPhrase;
-  var _ref$announceManner = _ref.announceManner;
-  var announceManner = _ref$announceManner === undefined ? 'assertive' : _ref$announceManner;
+  if (siteName) {
+    document.title = _setTitle(title, { siteName: siteName, delimiter: delimiter });
+
+    if (shouldAnnounce) {
+      _a11yToolkit2['default'].announce(title + ' ' + loadAlertPhrase, announceManner);
+    }
+  }
+
+  return title;
+}
+
+// Expects to get renderProps from renderProps in match() callback
+function getDocTitleFromRenderProps(renderProps, config) {
+  var _config$docTitleProp = config.docTitleProp;
+  var docTitleProp = _config$docTitleProp === undefined ? 'docTitle' : _config$docTitleProp;
+  var _config$delimiter = config.delimiter;
+  var delimiter = _config$delimiter === undefined ? '-' : _config$delimiter;
+  var siteName = config.siteName;
+
+  var title = _getDocTitle(renderProps.routes, docTitleProp);
+  return _setTitle(title, { siteName: siteName, delimiter: delimiter });
+}
+
+function transitionDocTitle(state, config) {
+  var _config$docTitleProp2 = config.docTitleProp;
+  var docTitleProp = _config$docTitleProp2 === undefined ? 'docTitle' : _config$docTitleProp2;
 
   var title = _getDocTitleFromState(state, docTitleProp);
   var lastTitle = document.title;
   if (title) {
     if (title !== lastTitle) {
-      if (siteName) {
-        document.title = title + ' ' + delimiter + ' ' + siteName;
-      } else {
-        document.title = '' + title;
-      }
-
-      if (shouldAnnounce) {
-        _a11yToolkit2['default'].announce(title + ' ' + loadAlertPhrase, announceManner);
-      }
+      _updateTitle(title, config);
     }
   }
 }
@@ -83,3 +107,4 @@ module.exports = {
   transitionDocTitle: transitionDocTitle,
   A11yAnnouncer: A11yAnnouncer
 };
+//transitionComputedDocTitle: transitionComputedDocTitle,

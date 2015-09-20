@@ -13,32 +13,50 @@ function _getDocTitleFromState(state, docTitleProp) {
   return _getDocTitle(state.routes, docTitleProp);
 }
 
-// Expects to get renderProps from renderProps in match() callback
-function getDocTitleFromRenderProps(renderProps) {
-  return _getDocTitle(renderProps.routes);
+function _setTitle(title, { siteName, delimiter}) {
+  let fullTitle = '';
+
+  if (siteName) {
+    fullTitle = `${title} ${delimiter} ${siteName}`;
+  } else {
+    fullTitle = `${title}`;
+  }
+  return fullTitle;
 }
 
-function transitionDocTitle(state, {
+function _updateTitle(title, {
   siteName,
-  docTitleProp = 'docTitle',
   delimiter = '-',
   shouldAnnounce = true,
   loadAlertPhrase = 'loaded',
   announceManner = 'assertive',
-} = {}) {
+}) {
+  if (siteName) {
+    document.title = _setTitle(title, { siteName, delimiter});
+
+    if (shouldAnnounce) {
+      a11yToolkit.announce(`${title} ${loadAlertPhrase}`, announceManner);
+    }
+  }
+
+  return title;
+}
+
+// Expects to get renderProps from renderProps in match() callback
+function getDocTitleFromRenderProps(renderProps, config) {
+  const { docTitleProp = 'docTitle', delimiter = '-', siteName} = config;
+  const title = _getDocTitle(renderProps.routes, docTitleProp);
+  return _setTitle(title, { siteName, delimiter });
+}
+
+function transitionDocTitle(state, config) {
+  const { docTitleProp = 'docTitle' } = config;
+
   const title = _getDocTitleFromState(state, docTitleProp);
   const lastTitle = document.title;
   if (title) {
     if (title !== lastTitle) {
-      if (siteName) {
-        document.title = `${title} ${delimiter} ${siteName}`;
-      } else {
-        document.title = `${title}`;
-      }
-
-      if (shouldAnnounce) {
-        a11yToolkit.announce(`${title} ${loadAlertPhrase}`, announceManner);
-      }
+      _updateTitle(title, config);
     }
   }
 }
@@ -64,4 +82,5 @@ module.exports = {
   getDocTitleFromRenderProps: getDocTitleFromRenderProps,
   transitionDocTitle: transitionDocTitle,
   A11yAnnouncer: A11yAnnouncer,
+  //transitionComputedDocTitle: transitionComputedDocTitle,
 };
