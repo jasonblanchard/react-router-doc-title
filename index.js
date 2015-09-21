@@ -10,21 +10,25 @@ var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
 
+/**
+ * Private methods
+ */
+
 // renderTree should be an array of components,
 // the last of which is the deepst component to render for that route.
-function _getDocTitle(routeTree, docTitleProp) {
+function _findDocTitle(routeTree) {
+  var docTitleProp = arguments.length <= 1 || arguments[1] === undefined ? 'docTitle' : arguments[1];
+
   var lastElement = routeTree[routeTree.length - 1];
   return lastElement[docTitleProp];
 }
 
 // Expects to get routeTree from this.state inside the onUpdate callback
-function _getDocTitleFromState(state) {
-  var docTitleProp = arguments.length <= 1 || arguments[1] === undefined ? 'docTitle' : arguments[1];
-
-  return _getDocTitle(state.routes, docTitleProp);
+function _findDocTitleFromState(state, docTitleProp) {
+  return _findDocTitle(state.routes, docTitleProp);
 }
 
-function _setTitle(title, _ref) {
+function _getTitle(title, _ref) {
   var siteName = _ref.siteName;
   var _ref$delimiter = _ref.delimiter;
   var delimiter = _ref$delimiter === undefined ? '-' : _ref$delimiter;
@@ -41,8 +45,7 @@ function _setTitle(title, _ref) {
 
 function _updateTitle(title, _ref2) {
   var siteName = _ref2.siteName;
-  var _ref2$delimiter = _ref2.delimiter;
-  var delimiter = _ref2$delimiter === undefined ? '-' : _ref2$delimiter;
+  var delimiter = _ref2.delimiter;
   var _ref2$shouldAnnounce = _ref2.shouldAnnounce;
   var shouldAnnounce = _ref2$shouldAnnounce === undefined ? true : _ref2$shouldAnnounce;
   var _ref2$loadAlertPhrase = _ref2.loadAlertPhrase;
@@ -50,7 +53,7 @@ function _updateTitle(title, _ref2) {
   var _ref2$announceManner = _ref2.announceManner;
   var announceManner = _ref2$announceManner === undefined ? 'assertive' : _ref2$announceManner;
 
-  document.title = _setTitle(title, { siteName: siteName, delimiter: delimiter });
+  document.title = _getTitle(title, { siteName: siteName, delimiter: delimiter });
 
   if (shouldAnnounce) {
     _a11yToolkit2['default'].announce(title + ' ' + loadAlertPhrase, announceManner);
@@ -59,22 +62,26 @@ function _updateTitle(title, _ref2) {
   return title;
 }
 
+/**
+ * Exported public methods
+ */
+
 // Expects to get renderProps from renderProps in match() callback
 function getDocTitleFromRenderProps(renderProps, config) {
   var docTitleProp = config.docTitleProp;
   var delimiter = config.delimiter;
   var siteName = config.siteName;
 
-  var title = _getDocTitle(renderProps.routes, docTitleProp);
+  var title = _findDocTitle(renderProps.routes, docTitleProp);
   if (title) {
-    return _setTitle(title, { siteName: siteName, delimiter: delimiter });
+    return _getTitle(title, { siteName: siteName, delimiter: delimiter });
   }
 }
 
 function transitionDocTitle(state, config) {
   var docTitleProp = config.docTitleProp;
 
-  var title = _getDocTitleFromState(state, docTitleProp);
+  var title = _findDocTitleFromState(state, docTitleProp);
 
   var lastTitle = document.title;
   if (title) {

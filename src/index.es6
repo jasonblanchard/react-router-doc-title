@@ -1,19 +1,23 @@
 import a11yToolkit from 'a11y-toolkit';
 import React from 'react';
 
+/**
+ * Private methods
+ */
+
 // renderTree should be an array of components,
 // the last of which is the deepst component to render for that route.
-function _getDocTitle(routeTree, docTitleProp) {
+function _findDocTitle(routeTree, docTitleProp = 'docTitle') {
   const lastElement = routeTree[routeTree.length - 1];
   return lastElement[docTitleProp];
 }
 
 // Expects to get routeTree from this.state inside the onUpdate callback
-function _getDocTitleFromState(state, docTitleProp = 'docTitle') {
-  return _getDocTitle(state.routes, docTitleProp);
+function _findDocTitleFromState(state, docTitleProp) {
+  return _findDocTitle(state.routes, docTitleProp);
 }
 
-function _setTitle(title, { siteName, delimiter = '-' }) {
+function _getTitle(title, { siteName, delimiter = '-' }) {
   let fullTitle = '';
 
   if (siteName) {
@@ -26,12 +30,12 @@ function _setTitle(title, { siteName, delimiter = '-' }) {
 
 function _updateTitle(title, {
   siteName,
-  delimiter = '-',
+  delimiter,
   shouldAnnounce = true,
   loadAlertPhrase = 'loaded',
   announceManner = 'assertive',
 }) {
-  document.title = _setTitle(title, { siteName, delimiter});
+  document.title = _getTitle(title, { siteName, delimiter});
 
   if (shouldAnnounce) {
     a11yToolkit.announce(`${title} ${loadAlertPhrase}`, announceManner);
@@ -40,20 +44,24 @@ function _updateTitle(title, {
   return title;
 }
 
+/**
+ * Exported public methods
+ */
+
 // Expects to get renderProps from renderProps in match() callback
 function getDocTitleFromRenderProps(renderProps, config) {
   const { docTitleProp, delimiter, siteName} = config;
 
-  const title = _getDocTitle(renderProps.routes, docTitleProp);
+  const title = _findDocTitle(renderProps.routes, docTitleProp);
   if (title) {
-    return _setTitle(title, { siteName, delimiter });
+    return _getTitle(title, { siteName, delimiter });
   }
 }
 
 function transitionDocTitle(state, config) {
   const { docTitleProp } = config;
 
-  const title = _getDocTitleFromState(state, docTitleProp);
+  const title = _findDocTitleFromState(state, docTitleProp);
 
   const lastTitle = document.title;
   if (title) {
