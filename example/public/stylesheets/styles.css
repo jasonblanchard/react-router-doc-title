@@ -1,0 +1,7 @@
+body {
+  font-family: 'Helvetica Neue', sans-serif;
+}
+
+a.active {
+  font-weight: bold;
+}
