@@ -55,6 +55,7 @@ function getDocTitleFromRenderProps(renderProps, config = {}) {
   }
 }
 
+// Expects to get state from `this.state` inside a Router `onUpdate` callback
 function transitionDocTitle(state, config = {}) {
   const { docTitleProp } = config;
   const title = _findDocTitle(state.routes, docTitleProp);

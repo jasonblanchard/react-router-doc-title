@@ -77,6 +77,7 @@ function getDocTitleFromRenderProps(renderProps) {
   }
 }
 
+// Expects to get state from `this.state` inside a Router `onUpdate` callback
 function transitionDocTitle(state) {
   var config = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
   var docTitleProp = config.docTitleProp;

@@ -191,6 +191,24 @@ describe('transitionDocTitle', () => {
     });
   });
 
+  describe('with a docTitleProp config', () => {
+    it('finds the title with the custom docTitleProp', () => {
+      const docTitlePropMockRenderProps = {
+        routes: [
+          {
+            pageTitle: 'top-level component',
+          },
+          {
+            pageTitle: 'nested component',
+          },
+        ],
+      };
+
+      transitionDocTitle(docTitlePropMockRenderProps, {docTitleProp: 'pageTitle'});
+      expect(document.title).toEqual('nested component');
+    });
+  });
+
   describe('when there is no docTitle prop', () => {
     it('does not set or announce the title', () => {
       const noTitleMockRenderProps = {routes: [{}, {}]};
