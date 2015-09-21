@@ -10,6 +10,8 @@ Tested against:
 - `react ^0.13`
 - `react-router ^1.0.0-rc1`
 
+# Installation
+`npm install --save jasonblanchard/react-router-doc-title`
 # Usage
 ## 1. Add `docTitle` prop to route definitions
 `routes.js`:
