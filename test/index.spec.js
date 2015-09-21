@@ -1,5 +1,5 @@
 import expect from 'expect';
-import { getDocTitleFromRenderProps, transitionComputedDocTitle } from '../index.js';
+import { getDocTitleFromRenderProps, transitionComputedDocTitle, transitionDocTitle } from '../index.js';
 
 const mockRenderProps = {routes: [
   {
@@ -9,6 +9,20 @@ const mockRenderProps = {routes: [
     docTitle: 'nested component',
   },
 ]};
+
+let announcedPhrase;
+let announcedManner;
+
+function announceFunc(phrase, mannor) {
+  announcedPhrase = phrase;
+  announcedManner = mannor;
+}
+
+afterEach(() => {
+  document.title = '';
+  announcedPhrase = undefined;
+  announcedManner = undefined;
+});
 
 describe('getDocTitleFromRenderProps', () => {
   describe('with default config', () => {
@@ -48,14 +62,6 @@ describe('getDocTitleFromRenderProps', () => {
 });
 
 describe('transitionComputedDocTitle', () => {
-  let announcedPhrase;
-  let announcedManner;
-
-  function announceFunc(phrase, mannor) {
-    announcedPhrase = phrase;
-    announcedManner = mannor;
-  }
-
   describe('with defaults', () => {
     it('sets the page title and announces a transition', () => {
       transitionComputedDocTitle('page title', { announceFunc });
@@ -115,15 +121,82 @@ describe('transitionComputedDocTitle', () => {
 
   describe('with an shouldAnnounce config', () => {
     it('uses the manner', () => {
-      announcedPhrase = undefined;
-      announcedManner = undefined;
-
       transitionComputedDocTitle('page title', {
         announceFunc,
         siteName: 'My App',
         shouldAnnounce: false,
       });
       expect(document.title).toEqual('page title - My App');
+      expect(announcedPhrase).toEqual(undefined);
+      expect(announcedManner).toEqual(undefined);
+    });
+  });
+});
+
+describe('transitionDocTitle', () => {
+  describe('with defaults', () => {
+    it('sets the page title and announces a transition', () => {
+      transitionDocTitle(mockRenderProps, { announceFunc });
+      expect(document.title).toEqual('nested component');
+      expect(announcedPhrase).toEqual('nested component loaded');
+      expect(announcedManner).toEqual('assertive');
+    });
+  });
+
+  describe('with siteName config', () => {
+    it('uses the site title in page title but not announce', () => {
+      transitionDocTitle(mockRenderProps, { announceFunc, siteName: 'My App'});
+      expect(document.title).toEqual('nested component - My App');
+      expect(announcedPhrase).toEqual('nested component loaded');
+      expect(announcedManner).toEqual('assertive');
+    });
+  });
+
+  describe('with a delimiter config', () => {
+    it('uses the delimiter', () => {
+      transitionDocTitle(mockRenderProps, {
+        announceFunc,
+        siteName: 'My App',
+        delimiter: '|',
+      });
+      expect(document.title).toEqual('nested component | My App');
+      expect(announcedPhrase).toEqual('nested component loaded');
+      expect(announcedManner).toEqual('assertive');
+    });
+  });
+
+  describe('with an announceManner config', () => {
+    it('uses the manner', () => {
+      transitionDocTitle(mockRenderProps, {
+        announceFunc,
+        siteName: 'My App',
+        announceManner: 'polite',
+      });
+      expect(document.title).toEqual('nested component - My App');
+      expect(announcedPhrase).toEqual('nested component loaded');
+      expect(announcedManner).toEqual('polite');
+    });
+  });
+
+  describe('with an shouldAnnounce config', () => {
+    it('uses the manner', () => {
+      transitionDocTitle(mockRenderProps, {
+        announceFunc,
+        siteName: 'My App',
+        shouldAnnounce: false,
+      });
+      expect(document.title).toEqual('nested component - My App');
+      expect(announcedPhrase).toEqual(undefined);
+      expect(announcedManner).toEqual(undefined);
+    });
+  });
+
+  describe('when there is no docTitle prop', () => {
+    it('does not set or announce the title', () => {
+      const noTitleMockRenderProps = {routes: [{}, {}]};
+
+      transitionDocTitle(noTitleMockRenderProps, { announceFunc});
+      expect(document.title).toEqual('');
       expect(announcedPhrase).toEqual(undefined);
       expect(announcedManner).toEqual(undefined);
     });

@@ -5,16 +5,11 @@ import React from 'react';
  * Private methods
  */
 
-// renderTree should be an array of components,
+// routeTree should be an array of components,
 // the last of which is the deepst component to render for that route.
 function _findDocTitle(routeTree, docTitleProp = 'docTitle') {
   const lastElement = routeTree[routeTree.length - 1];
   return lastElement[docTitleProp];
-}
-
-// Expects to get routeTree from this.state inside the onUpdate callback
-function _findDocTitleFromState(state, docTitleProp) {
-  return _findDocTitle(state.routes, docTitleProp);
 }
 
 function _getTitle(title, { siteName, delimiter = '-' }) {
@@ -60,12 +55,11 @@ function getDocTitleFromRenderProps(renderProps, config = {}) {
   }
 }
 
-function transitionDocTitle(state, config) {
+function transitionDocTitle(state, config = {}) {
   const { docTitleProp } = config;
-
-  const title = _findDocTitleFromState(state, docTitleProp);
-
+  const title = _findDocTitle(state.routes, docTitleProp);
   const lastTitle = document.title;
+
   if (title) {
     if (title !== lastTitle) {
       _updateTitle(title, config);

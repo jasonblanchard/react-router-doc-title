@@ -14,18 +14,13 @@ var _react2 = _interopRequireDefault(_react);
  * Private methods
  */
 
-// renderTree should be an array of components,
+// routeTree should be an array of components,
 // the last of which is the deepst component to render for that route.
 function _findDocTitle(routeTree) {
   var docTitleProp = arguments.length <= 1 || arguments[1] === undefined ? 'docTitle' : arguments[1];
 
   var lastElement = routeTree[routeTree.length - 1];
   return lastElement[docTitleProp];
-}
-
-// Expects to get routeTree from this.state inside the onUpdate callback
-function _findDocTitleFromState(state, docTitleProp) {
-  return _findDocTitle(state.routes, docTitleProp);
 }
 
 function _getTitle(title, _ref) {
@@ -82,12 +77,13 @@ function getDocTitleFromRenderProps(renderProps) {
   }
 }
 
-function transitionDocTitle(state, config) {
+function transitionDocTitle(state) {
+  var config = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
   var docTitleProp = config.docTitleProp;
 
-  var title = _findDocTitleFromState(state, docTitleProp);
-
+  var title = _findDocTitle(state.routes, docTitleProp);
   var lastTitle = document.title;
+
   if (title) {
     if (title !== lastTitle) {
       _updateTitle(title, config);
