@@ -40,6 +40,7 @@ function _getTitle(title, _ref) {
   } else {
     fullTitle = '' + title;
   }
+
   return fullTitle;
 }
 
@@ -52,11 +53,13 @@ function _updateTitle(title, _ref2) {
   var loadAlertPhrase = _ref2$loadAlertPhrase === undefined ? 'loaded' : _ref2$loadAlertPhrase;
   var _ref2$announceManner = _ref2.announceManner;
   var announceManner = _ref2$announceManner === undefined ? 'assertive' : _ref2$announceManner;
+  var _ref2$announceFunc = _ref2.announceFunc;
+  var announceFunc = _ref2$announceFunc === undefined ? _a11yToolkit2['default'].announce : _ref2$announceFunc;
 
   document.title = _getTitle(title, { siteName: siteName, delimiter: delimiter });
 
   if (shouldAnnounce) {
-    _a11yToolkit2['default'].announce(title + ' ' + loadAlertPhrase, announceManner);
+    announceFunc(title + ' ' + loadAlertPhrase, announceManner);
   }
 
   return title;
@@ -92,7 +95,9 @@ function transitionDocTitle(state, config) {
   }
 }
 
-function transitionComputedDocTitle(title, config) {
+function transitionComputedDocTitle(title) {
+  var config = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+
   _updateTitle(title, config);
 }
 

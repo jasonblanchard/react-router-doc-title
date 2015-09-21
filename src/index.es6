@@ -25,6 +25,7 @@ function _getTitle(title, { siteName, delimiter = '-' }) {
   } else {
     fullTitle = `${title}`;
   }
+
   return fullTitle;
 }
 
@@ -34,11 +35,12 @@ function _updateTitle(title, {
   shouldAnnounce = true,
   loadAlertPhrase = 'loaded',
   announceManner = 'assertive',
+  announceFunc =  a11yToolkit.announce,
 }) {
   document.title = _getTitle(title, { siteName, delimiter});
 
   if (shouldAnnounce) {
-    a11yToolkit.announce(`${title} ${loadAlertPhrase}`, announceManner);
+    announceFunc(`${title} ${loadAlertPhrase}`, announceManner);
   }
 
   return title;
@@ -71,7 +73,7 @@ function transitionDocTitle(state, config) {
   }
 }
 
-function transitionComputedDocTitle(title, config) {
+function transitionComputedDocTitle(title, config = {}) {
   _updateTitle(title, config);
 }
 
