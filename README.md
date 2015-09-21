@@ -3,14 +3,19 @@ Update page title when route changes using React Router. Also announces new titl
 
 **NOTE: Work in progress!**
 
+# Requirements
+Tested against:
+- `react ^0.13`
+- `react-router ^1.0.0-rc1`
+
 # Usage
 ## 1. Add `docTitle` prop to route definitions
 `routes.js`:
 ```javascript
-<Route path="/" component={RootContainer} docTitle="Home - My App">
-  <Route path="/about" component={AboutContainer} docTitle="About - My App"/>
-  <Route path="/settings" component={SettingsContainer} docTitle="Settings - My App">
-    <Route path="section" component={SpecificSettingsContainer} docTitle="Specific Settings - My App"/>
+<Route path="/" component={RootContainer} docTitle="Home">
+  <Route path="/about" component={AboutContainer} docTitle="About"/>
+  <Route path="/settings" component={SettingsContainer} docTitle="Settings">
+    <Route path="section" component={SpecificSettingsContainer} docTitle="Specific Settings"/>
   </Route>
 ```
 
@@ -25,12 +30,15 @@ import { transitionDocTitle } from 'react-router-doc-title';
 const history = createBrowserHistory();
 
 function handleUpdate() {
-  transitionDocTitle(this.state);
+  transitionDocTitle(this.state, {
+    siteName: 'My App',
+  });
 }
 
 React.render(<Router history={history} routes={routes} onUpdate={handleUpdate} />);
 ```
 
+Wit this setup, if we navigate to `/about`, our page title will be set to `About - My App` and the screen reader will announce `About loaded`. See API below for how to customize this display.
 
 ## 3. Initialize title on server (for universal apps)
 Get the title from `renderProps` and set it in your template. Here's an example using Express and Handlebars:
@@ -108,3 +116,36 @@ export default class RootContainer extends React.Component {
   }
 }
 ```
+
+
+
+
+
+# API
+## `transitionDocTitle(renderProps, routeTitleConfig)`
+Sets the document title and announces a page transition to screen readers. Used on the client in the `onUpdate` callback of the react-router `Router`.
+
+### Props
+- `renderProps` - Object that holds render props for react-router. You can get this in the react-router `Router` `onUpdate()` callback by calling `this.state`.
+- `RouteTitleConfig` - configuration object. Can accept these values:
+  - `siteName` - Name of your site or app. This will be tacked on to the end of the `docTitle` separated by the `delimiter` in the document title.
+  - `docTitleProp` (default: `docTitle`) - prop on react-router `Route` definition that holds the document title 
+  - `delimiter` (default: `-`) - Used to separate the `docTitle` and the `siteName` in the document title
+  - `shouldAnnounce` (default: `true`) - Set to `false` to prevent screen readers from announcing this page transition
+  - `loadAlertPhrase` (default: `loaded`) - phrase that will be read to screen readers when announcing document title transitions, i.e. "about loaded")
+  - `announceManner` (options: `assertive` | `polite`, default: `assertive`) - ARIA manner in which the page transition will be announced
+
+
+## `getDocTitleFromRenderProps(renderProps, routeTitleConfig)`
+Returns the title string from the deepest-nested react-router `Route` component handler. Used on the server to pull out the page title title in the `match` callback to render in a template on page load.
+
+### Props
+- `renderProps` - Object that holds render props for react-router. Get this in the `renderProps` argument in the `match` callback from react-router.
+- `routeTitleConfig` - configuration object. Can accept these values:
+  - `siteName` - Name of your site or app. This will be tacked on to the end of the `docTitle` separated by the `delimiter` in the document title.
+  - `docTitleProp` (default: `docTitle`) - prop on react-router `Route` definition that holds the document title 
+  - `delimiter` (default: `-`) - Used to separate the `docTitle` and the `siteName` in the document title
+
+
+# Tips
+- Put your `routeTitleConfig` options in their own module and include them with `transitionDocTitle`. That way you have the same config wherever you are transitioning the title.
