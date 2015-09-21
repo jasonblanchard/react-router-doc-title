@@ -146,6 +146,44 @@ Returns the title string from the deepest-nested react-router `Route` component 
   - `docTitleProp` (default: `docTitle`) - prop on react-router `Route` definition that holds the document title 
   - `delimiter` (default: `-`) - Used to separate the `docTitle` and the `siteName` in the document title
 
+## `transitionComputedDocTitle(title, routeTitleConfig)`
+Updates the page title to `title` and announces it to a screen reader. Used inside a react-router `Route` component handler when the title needs data computed inside the component handler. Add this in the `componentDidMount` lifecycle hook:
+
+```javascript
+import React from 'react';
+import { transitionComputedDocTitle } from 'react-router-doc-title';
+import siteTitleConfig from '../../config/siteTitle';
+
+export default class NestedSettings extends React.Component {
+
+  componentDidMount() {
+    transitionComputedDocTitle(`${this.props.someValue} Page`, siteTitleConfig);
+  }
+
+  render() {
+    return (
+      <div>
+        <h2>Some Specific Settings</h2>
+        ...
+      </div>
+    );
+  }
+}
+
+```
+
+Also, do not add a `docTitle` prop to he `Route` definition when the component sets the title using `transitionComputedDocTitle` inside `componentDidMount`.
+
+### Props
+- `title` - The page title.
+- `RouteTitleConfig` - configuration object. Can accept these values:
+  - `siteName` - Name of your site or app. This will be tacked on to the end of the `docTitle` separated by the `delimiter` in the document title.
+  - `docTitleProp` (default: `docTitle`) - prop on react-router `Route` definition that holds the document title 
+  - `delimiter` (default: `-`) - Used to separate the `docTitle` and the `siteName` in the document title
+  - `shouldAnnounce` (default: `true`) - Set to `false` to prevent screen readers from announcing this page transition
+  - `loadAlertPhrase` (default: `loaded`) - phrase that will be read to screen readers when announcing document title transitions, i.e. "about loaded")
+  - `announceManner` (options: `assertive` | `polite`, default: `assertive`) - ARIA manner in which the page transition will be announced
+
 
 # Tips
 - Put your `routeTitleConfig` options in their own module and include them with `transitionDocTitle`. That way you have the same config wherever you are transitioning the title.
