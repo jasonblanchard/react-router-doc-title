@@ -49,7 +49,7 @@ function _updateTitle(title, {
  */
 
 // Expects to get renderProps from renderProps in match() callback
-function getDocTitleFromRenderProps(renderProps, config) {
+function getDocTitleFromRenderProps(renderProps, config = {}) {
   const { docTitleProp, delimiter, siteName} = config;
 
   const title = _findDocTitle(renderProps.routes, docTitleProp);

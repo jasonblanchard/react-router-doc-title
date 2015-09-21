@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "./node_modules/mocha/bin/mocha --recursive --compilers js:babel-core/register",
+    "test:watch": "npm test -- --watch",
     "transpile": "./node_modules/babel/bin/babel.js src/index.es6 -o index.js",
     "transpile:watch": "npm run transpile -- -w"
   },
@@ -14,6 +15,9 @@
     "a11y-toolkit": "github:jasonblanchard/a11y-toolkit"
   },
   "devDependencies": {
+    "babel-core": "^5.8.25",
+    "expect": "^1.10.0",
+    "mocha": "^2.3.3",
     "react": "^0.13.0"
   }
 }

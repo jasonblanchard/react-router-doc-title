@@ -67,7 +67,8 @@ function _updateTitle(title, _ref2) {
  */
 
 // Expects to get renderProps from renderProps in match() callback
-function getDocTitleFromRenderProps(renderProps, config) {
+function getDocTitleFromRenderProps(renderProps) {
+  var config = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
   var docTitleProp = config.docTitleProp;
   var delimiter = config.delimiter;
   var siteName = config.siteName;
