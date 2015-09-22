@@ -1,7 +1,7 @@
 # react-router-doc-title
 Update page title when route changes using React Router. Also announces new title to screen reader.
 
-Inspired by [a11y-announcer](https://github.com/Robdel12/a11y-announcer) for Ember.js.
+Inspired by [a11y-announcer](https://github.com/Robdel12/a11y-announcer) for Ember.js and [a11y_kit](https://github.com/patrickfox/a11y_kit).
 
 **NOTE: Work in progress!**
 
