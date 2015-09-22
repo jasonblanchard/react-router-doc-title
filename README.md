@@ -69,6 +69,7 @@ app.get('/*', (req, res) => {
   const location = createLocation(req.url);
   
   match({ routes, location }, (error, redirectLocation, renderProps) => {
+    // Get the documentTitle from the render tree
     const documentTitle = getDocTitleFromRenderProps(renderProps);
     
     const markup = React.renderToString(
@@ -77,6 +78,7 @@ app.get('/*', (req, res) => {
       </Provider>
     );
     
+    // Pass the document title down to the template for initial render
     res.render('index', {
       markup: markup,
       documentTitle: documentTitle,
